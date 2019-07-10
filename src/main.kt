@@ -3,6 +3,7 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.ServerSocket
 import kotlin.concurrent.thread
+import kotlin.random.Random
 
 const val SERVER_PORT = 1337
 
@@ -21,12 +22,16 @@ fun main(args: Array<String>) {
                 val output = PrintWriter(socket.getOutputStream(), true)
                 val input = BufferedReader(InputStreamReader(socket.getInputStream()))
                 println("New Client: ${socket.inetAddress}")
-                output.println("Hello from the future!!")
-                val line = input.readLine()
-                println("Client ${socket.inetAddress} said:\n$line")
+                while(true) {
+                    println("Sending:")
+                    output.println("${Random.nextInt(0, 10000000)}")
+                    val line = input.readLine()
+                    println("Client ${socket.inetAddress} said:\n$line")
+                    if(line == null) break
+                }
+                socket.close()
                 output.println("Bye!")
                 println("Closing client ${socket.inetAddress} connection.")
-                socket.close()
             }
         }
     }
